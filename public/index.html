@@ -204,46 +204,59 @@
     let aiPredictionFailed = false;
 
     async function startSimulation() {
-        document.getElementById('start-btn').disabled = true;
-        document.getElementById('loading').style.display = 'block';
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('loading').style.display = 'block';
 
-        const userTraits = {
-            extraversion: Number(document.getElementById('e_score').value),
-            agreeableness: Number(document.getElementById('a_score').value),
-            openness: Number(document.getElementById('o_score').value),
-            conscientiousness: Number(document.getElementById('c_score').value),
-            neuroticism: Number(document.getElementById('n_score').value),
-            trendSensitivity: Number(document.getElementById('trend_score').value),
-            snsUsage: Number(document.getElementById('sns_score').value),
-            priceFlexibility: Number(document.getElementById('value_score').value),
-            brandSensitivity: Number(document.getElementById('brand_score').value),
-            impulseBuying: Number(document.getElementById('buy_score').value)
-        };
+    const userTraits = {
+        extraversion: Number(document.getElementById('e_score').value),
+        agreeableness: Number(document.getElementById('a_score').value),
+        openness: Number(document.getElementById('o_score').value),
+        conscientiousness: Number(document.getElementById('c_score').value),
+        neuroticism: Number(document.getElementById('n_score').value),
+        trendSensitivity: Number(document.getElementById('trend_score').value),
+        snsUsage: Number(document.getElementById('sns_score').value),
+        priceFlexibility: Number(document.getElementById('value_score').value),
+        brandSensitivity: Number(document.getElementById('brand_score').value),
+        impulseBuying: Number(document.getElementById('buy_score').value)
+    };
 
-        aiPredictionPromise = fetch('/api/simulate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ traits: userTraits })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error("서버 에러");
-            return response.json();
-        })
-        .then(result => {
-            aiAnswers = result.aiAnswers;
-            aiPredictionReady = true;
-        })
-        .catch(error => {
-            console.error(error);
-            aiPredictionFailed = true;
-        });
+    console.log("[Frontend] Sending /api/simulate request");
+    console.log("[Frontend] User traits:", userTraits);
 
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('step1').classList.remove('active');
-        document.getElementById('step2').classList.add('active');
+    const requestStartTime = performance.now();
 
-        renderScenario();
-    }
+    aiPredictionPromise = fetch('/api/simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ traits: userTraits })
+    })
+    .then(response => {
+        const elapsed = Math.round(performance.now() - requestStartTime);
+        console.log(`[Frontend] Received /api/simulate response after ${elapsed}ms`);
+        console.log("[Frontend] Response status:", response.status);
+
+        if (!response.ok) throw new Error("서버 에러");
+        return response.json();
+    })
+    .then(result => {
+        console.log("[Frontend] Parsed response:", result);
+
+        aiAnswers = result.aiAnswers;
+        aiPredictionReady = true;
+
+        console.log("[Frontend] AI answers received:", aiAnswers);
+    })
+    .catch(error => {
+        console.error("[Frontend] /api/simulate request failed:", error);
+        aiPredictionFailed = true;
+    });
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+
+    renderScenario();
+}
 
     function renderScenario() {
         if (currentScenario >= scenarios.length) {

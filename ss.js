@@ -211,6 +211,12 @@ function extractJsonArray(text = "") {
 }
 
 app.post('/api/simulate', async (req, res) => {
+    const requestId = Date.now().toString();
+    const requestStartTime = Date.now();
+
+    console.log(`[Backend][${requestId}] Received /api/simulate request`);
+    console.log(`[Backend][${requestId}] Request traits:`, req.body.traits);
+
     const traitProfile = buildEnglishTraitProfile(req.body.traits);
     const scenarioPromptData = buildScenarioPromptData();
 
@@ -247,7 +253,10 @@ Example: ["A", "B", "C", "D", "A", "B", "C", "D", "A", "B"]
 `;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        console.log(`[Backend][${requestId}] Sending request to Gemini`);
+        const geminiStartTime = Date.now();
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -259,27 +268,47 @@ Example: ["A", "B", "C", "D", "A", "B", "C", "D", "A", "B"]
             })
         });
 
+        const geminiElapsed = Date.now() - geminiStartTime;
+
+        console.log(`[Backend][${requestId}] Gemini responded in ${geminiElapsed}ms`);
+        console.log(`[Backend][${requestId}] Gemini response status: ${response.status}`);
+
         if (!response.ok) {
             const errorBody = await response.text();
-            throw new Error(`Gemini API error: ${response.status} ${errorBody}`);
+            console.error(`[Backend][${requestId}] Gemini API error body:`, errorBody);
+            throw new Error(`Gemini API error: ${response.status}`);
         }
 
         const data = await response.json();
+
+        console.log(`[Backend][${requestId}] Gemini raw response received`);
+
         const jsonString = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (!jsonString) {
             throw new Error("Gemini response did not include text output.");
         }
 
+        console.log(`[Backend][${requestId}] Gemini text output:`, jsonString);
+
         const aiAnswers = extractJsonArray(jsonString);
+
+        console.log(`[Backend][${requestId}] Parsed AI answers:`, aiAnswers);
 
         res.json({
             scenarios: predeterminedScenarios,
             aiAnswers
         });
 
+        const totalElapsed = Date.now() - requestStartTime;
+        console.log(`[Backend][${requestId}] Sent response to frontend in ${totalElapsed}ms`);
+
     } catch (error) {
-        console.error(error);
+        const totalElapsed = Date.now() - requestStartTime;
+
+        console.error(`[Backend][${requestId}] Simulation failed after ${totalElapsed}ms`);
+        console.error(`[Backend][${requestId}] Error:`, error);
+
         res.status(500).json({ error: "Simulation failed" });
     }
 });
