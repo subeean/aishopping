@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 AI 소비자와 쇼핑 비교</title>
+    <style>
+        :root { --primary-color: #111; --bg-color: #f4f4f4; --box-bg: #fff; --accent: #0066ff; }
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); color: var(--primary-color); display: flex; justify-content: center; padding: 40px 20px; margin: 0; }
+        .container { background-color: var(--box-bg); width: 100%; max-width: 600px; border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        h1 { text-align: center; font-size: 22px; margin-bottom: 30px; }
+        
+        .step { display: none; }
+        .step.active { display: block; }
+        .btn { display: block; width: 100%; padding: 15px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 30px; transition: 0.2s; }
+        .btn:hover { background-color: #333; }
+        .btn:disabled { background-color: #aaa; cursor: not-allowed; }
+        
+        .section-title { font-size: 16px; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;}
+        .slider-group { margin-bottom: 20px; }
+        .slider-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .slider-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .slider-wrapper span { font-size: 12px; color: #666; min-width: 60px; text-align: center; }
+        input[type=range] { width: 100%; cursor: pointer; }
+
+        .scenario-box { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee; }
+        .scenario-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; color: var(--accent); }
+        .scenario-desc { font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+        .option-btn { width: 100%; padding: 15px; background: white; border: 2px solid #ddd; border-radius: 8px; text-align: left; font-size: 14px; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
+        .option-btn:hover { border-color: var(--primary-color); background-color: #fafafa; }
+
+        .result-header { text-align: center; margin-bottom: 30px; }
+        .match-rate { font-size: 40px; font-weight: bold; color: var(--accent); margin: 10px 0; }
+        .comparison-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .comparison-item:last-child { border-bottom: none; }
+        .comp-title { font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+        .comp-choices { display: flex; gap: 10px; font-size: 13px; }
+        .choice-box { flex: 1; padding: 10px; border-radius: 6px; background: #f5f5f5; }
+        .choice-box.me { border-left: 3px solid var(--primary-color); }
+        .choice-box.ai { border-left: 3px solid var(--accent); }
+        .match-text { color: #c62828; font-weight: bold; font-size: 12px; margin-top: 5px; }
+        .match-text.yes { color: #2e7d32; }
+        
+        #loading { display: none; text-align: center; margin-top: 20px; font-weight: bold; color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 1단계 -->
+        <div id="step1" class="step active">
+            <h1>1단계: 나의 쇼핑 성향 입력</h1>
+            <p style="font-size: 14px; color: #666; text-align: center;">성향을 입력하면 동일한 쇼핑 상황에서 AI 소비자가 어떤 선택을 할지 먼저 예측합니다.</p>
+
+            <div class="section-title">1. 성격 성향 (Big 5)</div>
+            <div class="slider-group"><label>외향성 (E)</label><div class="slider-wrapper"><span>내향적</span><input type="range" id="e_score" min="1" max="5" value="3"><span>외향적</span></div></div>
+            <div class="slider-group"><label>친화성 (A)</label><div class="slider-wrapper"><span>경쟁적</span><input type="range" id="a_score" min="1" max="5" value="3"><span>협조적</span></div></div>
+            <div class="slider-group"><label>개방성 (O)</label><div class="slider-wrapper"><span>보수적</span><input type="range" id="o_score" min="1" max="5" value="3"><span>개방적</span></div></div>
+            <div class="slider-group"><label>성실성 (C)</label><div class="slider-wrapper"><span>즉흥적</span><input type="range" id="c_score" min="1" max="5" value="3"><span>계획적</span></div></div>
+            <div class="slider-group"><label>신경성 (N)</label><div class="slider-wrapper"><span>안정</span><input type="range" id="n_score" min="1" max="5" value="3"><span>민감</span></div></div>
+
+            <div class="section-title">2. 쇼핑 성향</div>
+            <div class="slider-group"><label>트렌드 민감도</label><div class="slider-wrapper"><span>유행 둔감</span><input type="range" id="trend_score" min="1" max="5" value="3"><span>유행 민감</span></div></div>
+            <div class="slider-group"><label>SNS 활용도</label><div class="slider-wrapper"><span>주 1회</span><input type="range" id="sns_score" min="1" max="5" value="3"><span>주 5회 이상</span></div></div>
+            <div class="slider-group"><label>가성비 중시</label><div class="slider-wrapper"><span>가성비 우선</span><input type="range" id="value_score" min="1" max="5" value="3"><span>금액 무관</span></div></div>
+            <div class="slider-group"><label>브랜드 민감도</label><div class="slider-wrapper"><span>브랜드 무관</span><input type="range" id="brand_score" min="1" max="5" value="3"><span>브랜드 중시</span></div></div>
+            <div class="slider-group"><label>구매 성향</label><div class="slider-wrapper"><span>계획 구매</span><input type="range" id="buy_score" min="1" max="5" value="3"><span>충동 구매</span></div></div>
+
+            <button class="btn" id="start-btn" onclick="startSimulation()">AI 소비자 예측 시작하기</button>
+            <div id="loading">AI가 입력된 성향을 바탕으로 10가지 쇼핑 상황을 예측하고 있습니다.</div>
+        </div>
+
+        <!-- 2단계 -->
+        <div id="step2" class="step">
+            <h1>2단계: 쇼핑 시나리오 선택</h1>
+            <div id="scenario-container"></div>
+        </div>
+
+        <!-- 3단계 -->
+        <div id="step3" class="step">
+            <div class="result-header">
+                <h2>테스트 결과</h2>
+                <p>나의 실제 선택과 AI 소비자의 예측 일치율</p>
+                <div class="match-rate" id="final-rate">0%</div>
+                <p id="result-interpretation" style="font-size: 14px; color: #555;"></p>
+            </div>
+            <div class="section-title">상세 비교 결과</div>
+            <div id="comparison-container"></div>
+            <button class="btn" onclick="location.reload()">다시 테스트하기</button>
+        </div>
+    </div>
+
+    <script>
+        let currentScenario = 0;
+        let userAnswers = [];
+        let aiAnswers = [];
+        let scenarios = [];
+
+        async function startSimulation() {
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+
+            // UI는 한국어이지만 서버에는 영어 key와 숫자만 보냅니다.
+            const userTraits = {
+                extraversion: Number(document.getElementById('e_score').value),
+                agreeableness: Number(document.getElementById('a_score').value),
+                openness: Number(document.getElementById('o_score').value),
+                conscientiousness: Number(document.getElementById('c_score').value),
+                neuroticism: Number(document.getElementById('n_score').value),
+                trendSensitivity: Number(document.getElementById('trend_score').value),
+                snsUsage: Number(document.getElementById('sns_score').value),
+                priceFlexibility: Number(document.getElementById('value_score').value),
+                brandSensitivity: Number(document.getElementById('brand_score').value),
+                impulseBuying: Number(document.getElementById('buy_score').value)
+            };
+
+            try {
+                const response = await fetch('/api/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ traits: userTraits })
+                });
+
+                if (!response.ok) throw new Error("서버 에러");
+
+                const result = await response.json();
+                
+                scenarios = result.scenarios;
+                aiAnswers = result.aiAnswers;
+                
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+                renderScenario();
+
+            } catch (error) {
+                console.error(error);
+                alert("시뮬레이션 중 오류가 발생했습니다.");
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function renderScenario() {
+            if (currentScenario >= scenarios.length) {
+                showResults();
+                return;
+            }
+
+            const sc = scenarios[currentScenario];
+            const container = document.getElementById('scenario-container');
+            
+            let optionsHtml = '';
+            sc.options.forEach(opt => {
+                optionsHtml += `<button class="option-btn" onclick="selectOption('${opt.id}')">${opt.text}</button>`;
+            });
+
+            container.innerHTML = `
+                <div class="scenario-box">
+                    <div class="scenario-title">Q${currentScenario + 1}. ${sc.title}</div>
+                    <div class="scenario-desc">${sc.desc}</div>
+                    ${optionsHtml}
+                </div>
+            `;
+        }
+
+        function selectOption(choiceId) {
+            userAnswers.push(choiceId);
+            currentScenario++;
+            renderScenario();
+        }
+
+        function getInterpretation(matchCount, totalCount) {
+            return `총 ${totalCount}개 중 ${matchCount}개가 일치했습니다.`;
+        }
+
+        function showResults() {
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
+
+            let matchCount = 0;
+            const container = document.getElementById('comparison-container');
+            let compHtml = '';
+
+            for (let i = 0; i < scenarios.length; i++) {
+                const sc = scenarios[i];
+                const uChoice = userAnswers[i];
+                const aChoice = aiAnswers[i]; 
+                const isMatch = (uChoice === aChoice);
+                
+                if (isMatch) matchCount++;
+
+                const uText = sc.options.find(o => o.id === uChoice)?.text || uChoice;
+                const aText = sc.options.find(o => o.id === aChoice)?.text || aChoice;
+
+                compHtml += `
+                    <div class="comparison-item">
+                        <div class="comp-title">Q${i+1}. ${sc.title}</div>
+                        <div class="comp-choices">
+                            <div class="choice-box me"><strong>나의 선택:</strong><br>${uText}</div>
+                            <div class="choice-box ai"><strong>AI 예측:</strong><br>${aText}</div>
+                        </div>
+                        <div class="match-text ${isMatch ? 'yes' : ''}">${isMatch ? '일치합니다.' : '불일치합니다.'}</div>
+                    </div>
+                `;
+            }
+
+            const matchRate = Math.round((matchCount / scenarios.length) * 100);
+            document.getElementById('final-rate').innerText = matchRate + "%";
+            document.getElementById('result-interpretation').innerText = getInterpretation(matchCount, scenarios.length);
+
+            container.innerHTML = compHtml;
+        }
+    </script>
+</body>
+</html>
