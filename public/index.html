@@ -90,126 +90,271 @@
         </div>
     </div>
 
-    <script>
-        let currentScenario = 0;
-        let userAnswers = [];
-        let aiAnswers = [];
-        let scenarios = [];
+<script>
+    const localScenarios = [
+        {
+            title: "SNS에서 본 한정 판매 제품",
+            desc: "관심 있던 브랜드가 오늘 밤까지만 판매하는 제품을 공개했습니다. 가격은 평소 예산보다 조금 높고, 후기는 아직 많지 않습니다.",
+            options: [
+                { id: "A", text: "지금 아니면 사기 어렵다고 판단해 바로 구매한다." },
+                { id: "B", text: "장바구니에 넣어두고 후기와 가격 비교를 먼저 확인한다." },
+                { id: "C", text: "예산을 넘기 때문에 이번에는 구매하지 않는다." },
+                { id: "D", text: "관심 상품으로 저장만 해두고 며칠 뒤에도 필요하면 다시 본다." }
+            ]
+        },
+        {
+            title: "주말 결혼식 하객룩 준비",
+            desc: "다음 주말 결혼식에 참석해야 합니다. 기존 옷도 입을 수는 있지만, 조금 더 깔끔한 옷을 새로 살지 고민됩니다.",
+            options: [
+                { id: "A", text: "격식 있는 자리이므로 신뢰하는 브랜드에서 새 옷을 산다." },
+                { id: "B", text: "가격대와 활용도를 비교해 평소에도 입을 수 있는 옷을 고른다." },
+                { id: "C", text: "온라인에서 빠른 배송과 할인 여부를 보고 필요한 것만 산다." },
+                { id: "D", text: "기존 옷을 조합하거나 지인에게 빌려 새 지출을 줄인다." }
+            ]
+        },
+        {
+            title: "무선 이어폰 교체 고민",
+            desc: "매일 쓰던 무선 이어폰이 고장 났습니다. 바로 새 제품을 살 수도 있고, 당분간 대체품으로 버틸 수도 있습니다.",
+            options: [
+                { id: "A", text: "사용 빈도가 높으니 익숙한 브랜드의 최신 모델을 바로 산다." },
+                { id: "B", text: "리뷰와 스펙을 비교해 가격 대비 성능이 좋은 모델을 고른다." },
+                { id: "C", text: "당장 필요한 기능만 되는 저렴한 제품을 산다." },
+                { id: "D", text: "급하지 않다고 보고 기존 유선 이어폰이나 임시 대체품을 쓴다." }
+            ]
+        },
+        {
+            title: "친한 친구의 생일 선물",
+            desc: "친한 친구의 생일 선물을 골라야 합니다. 예산은 5만 원 정도이고, 취향을 어느 정도 알고 있습니다.",
+            options: [
+                { id: "A", text: "작지만 브랜드 인지도가 있는 선물을 고른다." },
+                { id: "B", text: "친구가 실제로 필요하다고 말했던 물건을 산다." },
+                { id: "C", text: "취향이 빗나가지 않도록 상품권이나 기프티콘을 준다." },
+                { id: "D", text: "요즘 많이 언급되는 아이템 중 친구 취향에 맞는 것을 고른다." }
+            ]
+        },
+        {
+            title: "힘든 하루 후의 보상 소비",
+            desc: "퇴근길에 유난히 피곤하고 스트레스를 많이 받은 상태입니다. 기분 전환을 위해 무언가를 사고 싶습니다.",
+            options: [
+                { id: "A", text: "전부터 사고 싶던 옷이나 전자기기를 바로 구매한다." },
+                { id: "B", text: "좋아하는 음식이나 작은 사치로 오늘만 기분 전환한다." },
+                { id: "C", text: "편의점이나 카페에서 부담 없는 금액만 쓴다." },
+                { id: "D", text: "감정적으로 사지 않도록 구매를 미루고 집에 간다." }
+            ]
+        },
+        {
+            title: "주말 장보기",
+            desc: "식료품을 사러 마트에 왔습니다. 필요한 물건은 대략 정해져 있지만, 매장에는 할인 상품과 신제품도 많습니다.",
+            options: [
+                { id: "A", text: "신제품과 눈에 띄는 할인 상품을 보며 유연하게 고른다." },
+                { id: "B", text: "미리 적어둔 목록을 기준으로 할인율까지 확인해 산다." },
+                { id: "C", text: "평소 쓰던 브랜드와 익숙한 제품 위주로 빠르게 산다." },
+                { id: "D", text: "불필요한 구매를 피하려고 꼭 필요한 품목만 산다." }
+            ]
+        },
+        {
+            title: "새로운 취미 장비 구매",
+            desc: "골프, 테니스, 러닝 같은 새로운 취미를 시작하려고 합니다. 기본 장비를 어느 정도 준비해야 합니다.",
+            options: [
+                { id: "A", text: "처음부터 마음에 드는 브랜드의 장비를 제대로 갖춘다." },
+                { id: "B", text: "입문자 후기를 찾아보고 합리적인 기본 장비를 산다." },
+                { id: "C", text: "중고나 대여로 먼저 해본 뒤 계속할지 판단한다." },
+                { id: "D", text: "초기 비용이 부담되어 장비가 거의 필요 없는 방식부터 시작한다." }
+            ]
+        },
+        {
+            title: "친구들과 휴가 숙소 예약",
+            desc: "친구들과 여름 휴가 숙소를 정해야 합니다. 위치, 가격, 분위기, 후기 사이에서 선택해야 합니다.",
+            options: [
+                { id: "A", text: "분위기와 사진이 좋은 숙소를 우선으로 고른다." },
+                { id: "B", text: "위치, 청결도, 후기, 가격을 비교해 균형 잡힌 곳을 고른다." },
+                { id: "C", text: "숙소에는 오래 머물지 않으니 예산을 가장 우선한다." },
+                { id: "D", text: "친구들이 선호하는 조건에 맞추고 큰 이견이 없으면 따른다." }
+            ]
+        },
+        {
+            title: "동영상 구독 서비스 결제",
+            desc: "무료 체험이 끝났고, 유료 결제를 계속할지 결정해야 합니다. 자주 쓰긴 하지만 매달 나가는 비용이 신경 쓰입니다.",
+            options: [
+                { id: "A", text: "자주 쓰는 서비스라면 편의성에 비용을 지불한다." },
+                { id: "B", text: "할인, 가족 요금제, 대체 서비스를 비교한 뒤 결정한다." },
+                { id: "C", text: "고정 지출을 늘리고 싶지 않아 일단 해지한다." },
+                { id: "D", text: "사용 시간을 줄이는 계기로 보고 결제하지 않는다." }
+            ]
+        },
+        {
+            title: "예상 밖의 50만 원 보너스",
+            desc: "예상하지 못한 50만 원이 생겼습니다. 사고 싶던 물건도 있고, 저축이나 주변 사람을 위한 지출도 고려할 수 있습니다.",
+            options: [
+                { id: "A", text: "미뤄둔 위시리스트 중 가장 갖고 싶던 물건을 산다." },
+                { id: "B", text: "일부는 나를 위해 쓰고 나머지는 저축한다." },
+                { id: "C", text: "예상 밖의 돈이므로 전액 저축하거나 투자한다." },
+                { id: "D", text: "가족이나 가까운 사람과 나누는 데 일부를 쓴다." }
+            ]
+        }
+    ];
 
-        async function startSimulation() {
-            document.getElementById('start-btn').disabled = true;
-            document.getElementById('loading').style.display = 'block';
+    let currentScenario = 0;
+    let userAnswers = [];
+    let aiAnswers = [];
+    let scenarios = localScenarios;
 
-            // UI는 한국어이지만 서버에는 영어 key와 숫자만 보냅니다.
-            const userTraits = {
-                extraversion: Number(document.getElementById('e_score').value),
-                agreeableness: Number(document.getElementById('a_score').value),
-                openness: Number(document.getElementById('o_score').value),
-                conscientiousness: Number(document.getElementById('c_score').value),
-                neuroticism: Number(document.getElementById('n_score').value),
-                trendSensitivity: Number(document.getElementById('trend_score').value),
-                snsUsage: Number(document.getElementById('sns_score').value),
-                priceFlexibility: Number(document.getElementById('value_score').value),
-                brandSensitivity: Number(document.getElementById('brand_score').value),
-                impulseBuying: Number(document.getElementById('buy_score').value)
-            };
+    let aiPredictionPromise = null;
+    let aiPredictionReady = false;
+    let aiPredictionFailed = false;
 
-            try {
-                const response = await fetch('/api/simulate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ traits: userTraits })
-                });
+    async function startSimulation() {
+        document.getElementById('start-btn').disabled = true;
+        document.getElementById('loading').style.display = 'block';
 
-                if (!response.ok) throw new Error("서버 에러");
+        const userTraits = {
+            extraversion: Number(document.getElementById('e_score').value),
+            agreeableness: Number(document.getElementById('a_score').value),
+            openness: Number(document.getElementById('o_score').value),
+            conscientiousness: Number(document.getElementById('c_score').value),
+            neuroticism: Number(document.getElementById('n_score').value),
+            trendSensitivity: Number(document.getElementById('trend_score').value),
+            snsUsage: Number(document.getElementById('sns_score').value),
+            priceFlexibility: Number(document.getElementById('value_score').value),
+            brandSensitivity: Number(document.getElementById('brand_score').value),
+            impulseBuying: Number(document.getElementById('buy_score').value)
+        };
 
-                const result = await response.json();
-                
-                scenarios = result.scenarios;
-                aiAnswers = result.aiAnswers;
-                
-                document.getElementById('step1').classList.remove('active');
-                document.getElementById('step2').classList.add('active');
-                renderScenario();
+        aiPredictionPromise = fetch('/api/simulate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ traits: userTraits })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("서버 에러");
+            return response.json();
+        })
+        .then(result => {
+            aiAnswers = result.aiAnswers;
+            aiPredictionReady = true;
+        })
+        .catch(error => {
+            console.error(error);
+            aiPredictionFailed = true;
+        });
 
-            } catch (error) {
-                console.error(error);
-                alert("시뮬레이션 중 오류가 발생했습니다.");
-                document.getElementById('start-btn').disabled = false;
-                document.getElementById('loading').style.display = 'none';
-            }
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+
+        renderScenario();
+    }
+
+    function renderScenario() {
+        if (currentScenario >= scenarios.length) {
+            showResults();
+            return;
         }
 
-        function renderScenario() {
-            if (currentScenario >= scenarios.length) {
-                showResults();
-                return;
-            }
+        const sc = scenarios[currentScenario];
+        const container = document.getElementById('scenario-container');
 
-            const sc = scenarios[currentScenario];
-            const container = document.getElementById('scenario-container');
-            
-            let optionsHtml = '';
-            sc.options.forEach(opt => {
-                optionsHtml += `<button class="option-btn" onclick="selectOption('${opt.id}')">${opt.text}</button>`;
-            });
+        let optionsHtml = '';
+        sc.options.forEach(opt => {
+            optionsHtml += `<button class="option-btn" onclick="selectOption('${opt.id}')">${opt.text}</button>`;
+        });
 
-            container.innerHTML = `
-                <div class="scenario-box">
-                    <div class="scenario-title">Q${currentScenario + 1}. ${sc.title}</div>
-                    <div class="scenario-desc">${sc.desc}</div>
-                    ${optionsHtml}
+        container.innerHTML = `
+            <div class="scenario-box">
+                <div class="scenario-title">Q${currentScenario + 1}. ${sc.title}</div>
+                <div class="scenario-desc">${sc.desc}</div>
+                ${optionsHtml}
+            </div>
+        `;
+    }
+
+    function selectOption(choiceId) {
+        userAnswers.push(choiceId);
+        currentScenario++;
+        renderScenario();
+    }
+
+    function getInterpretation(matchCount, totalCount) {
+        return `총 ${totalCount}개 중 ${matchCount}개가 일치했습니다.`;
+    }
+
+    async function showResults() {
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step3').classList.add('active');
+
+        if (!aiPredictionReady && !aiPredictionFailed) {
+            document.querySelector('.result-header').innerHTML = `
+                <h2>AI 예측 결과를 기다리는 중입니다</h2>
+                <p style="font-size: 14px; color: #555;">
+                    선택은 완료되었습니다. AI 소비자의 예측 결과가 도착하면 비교 결과를 보여드립니다.
+                </p>
+            `;
+
+            document.getElementById('comparison-container').innerHTML = '';
+
+            await aiPredictionPromise;
+        }
+
+        if (aiPredictionFailed || !Array.isArray(aiAnswers) || aiAnswers.length !== scenarios.length) {
+            document.querySelector('.result-header').innerHTML = `
+                <h2>결과를 불러오지 못했습니다</h2>
+                <p style="font-size: 14px; color: #555;">
+                    AI 예측 응답을 받는 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.
+                </p>
+            `;
+
+            document.getElementById('comparison-container').innerHTML = `
+                <button class="btn" onclick="location.reload()">다시 테스트하기</button>
+            `;
+
+            return;
+        }
+
+        document.querySelector('.result-header').innerHTML = `
+            <h2>테스트 결과</h2>
+            <p>나의 실제 선택과 AI 소비자의 예측 일치율</p>
+            <div class="match-rate" id="final-rate">0%</div>
+            <p id="result-interpretation" style="font-size: 14px; color: #555;"></p>
+        `;
+
+        let matchCount = 0;
+        const container = document.getElementById('comparison-container');
+        let compHtml = '';
+
+        for (let i = 0; i < scenarios.length; i++) {
+            const sc = scenarios[i];
+            const uChoice = userAnswers[i];
+            const aChoice = aiAnswers[i];
+            const isMatch = (uChoice === aChoice);
+
+            if (isMatch) matchCount++;
+
+            const uText = sc.options.find(o => o.id === uChoice)?.text || uChoice;
+            const aText = sc.options.find(o => o.id === aChoice)?.text || aChoice;
+
+            compHtml += `
+                <div class="comparison-item">
+                    <div class="comp-title">Q${i + 1}. ${sc.title}</div>
+                    <div class="comp-choices">
+                        <div class="choice-box me"><strong>나의 선택:</strong><br>${uText}</div>
+                        <div class="choice-box ai"><strong>AI 예측:</strong><br>${aText}</div>
+                    </div>
+                    <div class="match-text ${isMatch ? 'yes' : ''}">
+                        ${isMatch ? '일치합니다.' : '불일치합니다.'}
+                    </div>
                 </div>
             `;
         }
 
-        function selectOption(choiceId) {
-            userAnswers.push(choiceId);
-            currentScenario++;
-            renderScenario();
-        }
+        const matchRate = Math.round((matchCount / scenarios.length) * 100);
 
-        function getInterpretation(matchCount, totalCount) {
-            return `총 ${totalCount}개 중 ${matchCount}개가 일치했습니다.`;
-        }
+        document.getElementById('final-rate').innerText = matchRate + "%";
+        document.getElementById('result-interpretation').innerText = getInterpretation(matchCount, scenarios.length);
 
-        function showResults() {
-            document.getElementById('step2').classList.remove('active');
-            document.getElementById('step3').classList.add('active');
+        compHtml += `<button class="btn" onclick="location.reload()">다시 테스트하기</button>`;
 
-            let matchCount = 0;
-            const container = document.getElementById('comparison-container');
-            let compHtml = '';
-
-            for (let i = 0; i < scenarios.length; i++) {
-                const sc = scenarios[i];
-                const uChoice = userAnswers[i];
-                const aChoice = aiAnswers[i]; 
-                const isMatch = (uChoice === aChoice);
-                
-                if (isMatch) matchCount++;
-
-                const uText = sc.options.find(o => o.id === uChoice)?.text || uChoice;
-                const aText = sc.options.find(o => o.id === aChoice)?.text || aChoice;
-
-                compHtml += `
-                    <div class="comparison-item">
-                        <div class="comp-title">Q${i+1}. ${sc.title}</div>
-                        <div class="comp-choices">
-                            <div class="choice-box me"><strong>나의 선택:</strong><br>${uText}</div>
-                            <div class="choice-box ai"><strong>AI 예측:</strong><br>${aText}</div>
-                        </div>
-                        <div class="match-text ${isMatch ? 'yes' : ''}">${isMatch ? '일치합니다.' : '불일치합니다.'}</div>
-                    </div>
-                `;
-            }
-
-            const matchRate = Math.round((matchCount / scenarios.length) * 100);
-            document.getElementById('final-rate').innerText = matchRate + "%";
-            document.getElementById('result-interpretation').innerText = getInterpretation(matchCount, scenarios.length);
-
-            container.innerHTML = compHtml;
-        }
-    </script>
+        container.innerHTML = compHtml;
+    }
+</script>
 </body>
 </html>
