@@ -65,6 +65,15 @@
             <div class="slider-group"><label>가성비 중시</label><div class="slider-wrapper"><span>가성비 우선</span><input type="range" id="value_score" min="1" max="5" value="3"><span>금액 무관</span></div></div>
             <div class="slider-group"><label>브랜드 민감도</label><div class="slider-wrapper"><span>브랜드 무관</span><input type="range" id="brand_score" min="1" max="5" value="3"><span>브랜드 중시</span></div></div>
             <div class="slider-group"><label>구매 성향</label><div class="slider-wrapper"><span>계획 구매</span><input type="range" id="buy_score" min="1" max="5" value="3"><span>충동 구매</span></div></div>
+            
+            <div class="section-title">3. 현재 상황</div>
+            <div class="slider-group"><label></label>
+            <select id="user_status" style="width: 100%; padding: 10px; border-radius: 8px;">
+            <option value="student">학생 / 취업준비생 (예산이 타이트함)</option>
+            <option value="worker_junior">사회초년생 (소비 여력이 조금 있음)</option>
+            <option value="worker_senior">직장인 (예산보다 시간/질을 중시함)</option>
+            </select>
+            </div>
 
             <button class="btn" id="start-btn" onclick="startSimulation()">AI 소비자 예측 시작하기</button>
             <div id="loading">AI가 입력된 성향을 바탕으로 10가지 쇼핑 상황을 예측하고 있습니다.</div>
@@ -217,7 +226,8 @@
         snsUsage: Number(document.getElementById('sns_score').value),
         priceFlexibility: Number(document.getElementById('value_score').value),
         brandSensitivity: Number(document.getElementById('brand_score').value),
-        impulseBuying: Number(document.getElementById('buy_score').value)
+        impulseBuying: Number(document.getElementById('buy_score').value),
+        userStatus: document.getElementById('user_status').value
     };
 
     console.log("[Frontend] Sending /api/simulate request");

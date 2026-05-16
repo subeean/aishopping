@@ -198,16 +198,19 @@ function extractJsonArray(text = "") {
     const trimmed = text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
     const parsed = JSON.parse(trimmed);
 
-    if (!Array.isArray(parsed)) {
-        throw new Error("Model response is not a JSON array.");
+    // AI가 추론 과정(reasoning)을 거친 후 내놓은 answers 배열만 추출
+    const answers = parsed.answers || parsed; 
+
+    if (!Array.isArray(answers)) {
+        throw new Error("Model response does not contain an answers array.");
     }
 
     const validOptionIds = new Set(["A", "B", "C", "D"]);
-    if (parsed.length !== predeterminedScenarios.length || parsed.some(answer => !validOptionIds.has(answer))) {
+    if (answers.length !== predeterminedScenarios.length || answers.some(ans => !validOptionIds.has(ans))) {
         throw new Error("Model response does not contain exactly 10 valid option IDs.");
     }
 
-    return parsed;
+    return answers;
 }
 
 app.post('/api/simulate', async (req, res) => {
@@ -220,6 +223,14 @@ app.post('/api/simulate', async (req, res) => {
     const traitProfile = buildEnglishTraitProfile(req.body.traits);
     const scenarioPromptData = buildScenarioPromptData();
 
+    const statusMap = {
+        "student": "Student / Job-seeker (Tight budget, heavily prioritizes saving and value-for-money)",
+        "worker_junior": "Junior employee (Some disposable income, balances between saving and occasional treats)",
+        "worker_senior": "Established professional (High disposable income, prioritizes time, convenience, and quality over strict budget)"
+    };
+
+    const currentLifeStage = statusMap[req.body.traits.userStatus] || statusMap["worker_junior"];
+
     const prompt = `
 You are simulating a consumer decision-maker for a user study.
 
@@ -228,6 +239,9 @@ Predict which option this person would choose in each shopping scenario.
 Base the prediction only on the trait profile below.
 Do not choose the objectively best answer. Choose the answer most consistent with the profile.
 
+Current Life Stage & Financial Context:
+${currentLifeStage}
+
 Trait profile:
 ${JSON.stringify(traitProfile, null, 2)}
 
@@ -235,6 +249,7 @@ Shopping scenarios:
 ${JSON.stringify(scenarioPromptData, null, 2)}
 
 Decision guidance:
+- Consider the "Current Life Stage" as the foundational budget constraint. A tight budget (Student) overrides high impulse buying or brand sensitivity.
 - High trend sensitivity and high SNS usage may increase responsiveness to new, social, or visually appealing products.
 - High price flexibility may increase willingness to pay for convenience, quality, or brand.
 - Low price flexibility means stronger value-for-money and budget control.
@@ -245,11 +260,24 @@ Decision guidance:
 - High agreeableness may increase consideration of friends, family, or group preference.
 - High neuroticism may increase stress-driven decisions or risk avoidance depending on the scenario.
 
+Decision guidance (Conflict Resolution):
+- If "price flexibility" is low (1-2), it acts as an absolute constraint. Even if "trend sensitivity" or "impulse buying" is high, budget limits will force a conservative choice (e.g., delaying purchase, comparing prices).
+- "Agreeableness" overrides personal preference when the scenario involves other people (e.g., gifts, group trips).
+- If "neuroticism" is high and the situation is stressful, "impulse buying" is heavily amplified as a coping mechanism.
+
 Output rules:
-Return only a JSON array of exactly 10 uppercase letters.
-Each letter must be one of "A", "B", "C", or "D".
-Do not include markdown, commentary, numbering, or explanations.
-Example: ["A", "B", "C", "D", "A", "B", "C", "D", "A", "B"]
+Return a JSON object with two keys:
+1. "reasoning": A brief 1-sentence analysis of WHY the user would choose the option for each of the 10 scenarios based on their traits. (Array of 10 strings)
+2. "answers": An array of exactly 10 uppercase letters ("A", "B", "C", or "D") representing the final choices.
+
+Example:
+{
+  "reasoning": [
+    "High trend sensitivity and SNS usage make them prone to limited editions.",
+    "Low price flexibility means they will reuse existing clothes."
+    // ... 8 more ...
+  ],
+  "answers": ["A", "D", "B", "C", "A", "B", "C", "D", "A", "B"]
 `;
 
     try {
@@ -263,7 +291,7 @@ Example: ["A", "B", "C", "D", "A", "B", "C", "D", "A", "B"]
                 contents: [{ parts: [{ text: prompt }] }],
                 generationConfig: {
                     response_mime_type: "application/json",
-                    temperature: 0.25
+                    temperature: 0.1
                 }
             })
         });
