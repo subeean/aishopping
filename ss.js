@@ -134,50 +134,97 @@ const predeterminedScenarios = [
 ];
 
 function buildEnglishTraitProfile(traits = {}) {
+    const getDesc = (trait, score) => {
+        const s = Math.max(1, Math.min(5, Number(score))); // Ensure score is between 1 and 5
+        const map = {
+            extraversion: [
+                "1 - Very introverted: Prefers solitude, highly reserved, avoids drawing attention.",
+                "2 - Introverted: Reserved, prefers small groups over large gatherings.",
+                "3 - Ambivert: Balances social interaction with a need for alone time.",
+                "4 - Extraverted: Outgoing, enjoys socializing and being around people.",
+                "5 - Very extraverted: Highly sociable, draws energy from constant interaction."
+            ],
+            agreeableness: [
+                "1 - Highly competitive: Direct, prioritizes self-interest and logic over group harmony.",
+                "2 - Competitive: Willing to challenge others and prioritize own needs.",
+                "3 - Neutral: Balances self-interest with the needs of others.",
+                "4 - Cooperative: Empathetic, accommodating, and considerate of others.",
+                "5 - Highly agreeable: Strongly prioritizes group harmony, highly empathetic, hates conflict."
+            ],
+            openness: [
+                "1 - Highly conventional: Prefers strict routine, cautious, highly resistant to new things.",
+                "2 - Conventional: Prefers the familiar, practical, and traditional.",
+                "3 - Neutral: Open to some new things but appreciates familiar routines.",
+                "4 - Open: Enjoys novelty, variety, and trying new experiences.",
+                "5 - Highly open: Imaginative, constantly seeks out novelty and unconventional ideas."
+            ],
+            conscientiousness: [
+                "1 - Highly spontaneous: Dislikes plans, acts entirely on impulse, disorganized.",
+                "2 - Spontaneous: Flexible, prefers going with the flow rather than strict planning.",
+                "3 - Neutral: Capable of planning but can adapt to changes.",
+                "4 - Organized: Disciplined, prefers structure and making deliberate plans.",
+                "5 - Highly conscientious: Strictly disciplined, plans everything meticulously, very budget-conscious."
+            ],
+            neuroticism: [
+                "1 - Highly resilient: Emotionally very stable, not easily swayed by stress or anxiety.",
+                "2 - Resilient: Generally calm, handles stressful situations well.",
+                "3 - Neutral: Experiences normal levels of stress and emotional reactivity.",
+                "4 - Reactive: Prone to stress, easily worried, and emotionally reactive.",
+                "5 - Highly neurotic: Highly sensitive, easily overwhelmed, strongly driven by anxiety or mood swings."
+            ],
+            trendSensitivity: [
+                "1 - Ignores trends: Completely unaffected by what is currently popular.",
+                "2 - Low sensitivity: Rarely follows trends, prefers timeless items.",
+                "3 - Neutral: Aware of trends but doesn't feel compelled to follow them.",
+                "4 - Trend-conscious: Likes to keep up with popular styles and new releases.",
+                "5 - Highly trend-sensitive: Must have the latest items, heavily influenced by what is trendy."
+            ],
+            snsUsage: [
+                "1 - Rarely uses SNS: Disconnected from social media influence.",
+                "2 - Occasional user: Uses SNS sparingly, not heavily influenced by online feeds.",
+                "3 - Regular user: Checks SNS somewhat regularly.",
+                "4 - Active user: Spends significant time on SNS, influenced by online reviews.",
+                "5 - Heavy user: Highly influenced by social media feeds, influencers, and viral items."
+            ],
+            priceFlexibility: [
+                "1 - Strictly budget-bound: Always seeks the absolute lowest price, money is the primary constraint.",
+                "2 - Value-conscious: Prioritizes value for money, heavily compares prices.",
+                "3 - Neutral: Balances price with quality and convenience.",
+                "4 - Quality over price: Willing to pay extra for better quality or convenience.",
+                "5 - Price is no object: Budget is rarely a constraint, prioritizes brand, time, and premium quality."
+            ],
+            brandSensitivity: [
+                "1 - Brand-agnostic: Cares only about function, completely ignores brand names.",
+                "2 - Low preference: Prefers unbranded or generic goods if the quality is okay.",
+                "3 - Neutral: Appreciates good brands but isn't loyal to them.",
+                "4 - Brand-conscious: Prefers buying from known, trusted brands.",
+                "5 - Highly brand-loyal: Will exclusively buy from famous or premium brands for status and trust."
+            ],
+            impulseBuying: [
+                "1 - Strictly planned: Never buys on impulse, always sticks to a premeditated list.",
+                "2 - Mostly planned: Thinks carefully before buying, rarely makes sudden purchases.",
+                "3 - Neutral: Occasionally treats themselves but mostly plans purchases.",
+                "4 - Impulsive: Often makes sudden purchases if something catches their eye.",
+                "5 - Highly impulsive: Frequently buys based on immediate mood or desire, struggles to delay gratification."
+            ]
+        };
+        return map[trait][s - 1];
+    };
+
     return {
         personality: {
-            extraversion: {
-                score: Number(traits.extraversion ?? traits["외향성"] ?? 3),
-                scale: "1 = introverted, 5 = extraverted"
-            },
-            agreeableness: {
-                score: Number(traits.agreeableness ?? traits["친화성"] ?? 3),
-                scale: "1 = competitive/direct, 5 = cooperative/considerate"
-            },
-            openness: {
-                score: Number(traits.openness ?? traits["개방성"] ?? 3),
-                scale: "1 = conventional/cautious, 5 = open to novelty"
-            },
-            conscientiousness: {
-                score: Number(traits.conscientiousness ?? traits["성실성"] ?? 3),
-                scale: "1 = spontaneous, 5 = planned/organized"
-            },
-            neuroticism: {
-                score: Number(traits.neuroticism ?? traits["신경성"] ?? 3),
-                scale: "1 = emotionally stable, 5 = sensitive/reactive"
-            }
+            extraversion: getDesc('extraversion', traits.extraversion ?? traits["외향성"] ?? 3),
+            agreeableness: getDesc('agreeableness', traits.agreeableness ?? traits["친화성"] ?? 3),
+            openness: getDesc('openness', traits.openness ?? traits["개방성"] ?? 3),
+            conscientiousness: getDesc('conscientiousness', traits.conscientiousness ?? traits["성실성"] ?? 3),
+            neuroticism: getDesc('neuroticism', traits.neuroticism ?? traits["신경성"] ?? 3)
         },
-        shopping: {
-            trendSensitivity: {
-                score: Number(traits.trendSensitivity ?? traits["트렌드 민감도"] ?? 3),
-                scale: "1 = not trend-sensitive, 5 = highly trend-sensitive"
-            },
-            snsUsage: {
-                score: Number(traits.snsUsage ?? traits["SNS 활용도"] ?? 3),
-                scale: "1 = uses social media about once a week, 5 = uses social media five or more times a week"
-            },
-            priceFlexibility: {
-                score: Number(traits.priceFlexibility ?? traits["가성비 무관"] ?? 3),
-                scale: "1 = strongly prioritizes value for money, 5 = price is not a major constraint"
-            },
-            brandSensitivity: {
-                score: Number(traits.brandSensitivity ?? traits["브랜드 민감도"] ?? 3),
-                scale: "1 = brand is not important, 5 = brand is very important"
-            },
-            impulseBuying: {
-                score: Number(traits.impulseBuying ?? traits["충동 구매율"] ?? 3),
-                scale: "1 = planned purchase, 5 = impulsive purchase"
-            }
+        shoppingHabits: {
+            trendSensitivity: getDesc('trendSensitivity', traits.trendSensitivity ?? traits["트렌드 민감도"] ?? 3),
+            snsUsage: getDesc('snsUsage', traits.snsUsage ?? traits["SNS 활용도"] ?? 3),
+            priceFlexibility: getDesc('priceFlexibility', traits.priceFlexibility ?? traits["가성비 무관"] ?? 3),
+            brandSensitivity: getDesc('brandSensitivity', traits.brandSensitivity ?? traits["브랜드 민감도"] ?? 3),
+            impulseBuying: getDesc('impulseBuying', traits.impulseBuying ?? traits["충동 구매율"] ?? 3)
         }
     };
 }
