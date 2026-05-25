@@ -24,15 +24,15 @@ const predeterminedScenarios = [
         ]
     },
     {
-        title: "불매 기업의 서비스",
-        titleEn: "Boycotted service: Beliefs vs. Exhaustion",
-        desc: "당신은 비윤리적 경영으로 논란이 된 프랜차이즈 카페를 불매 중입니다. 하지만 오늘 너무 피곤하고 스트레스를 받아 당장 커피 수혈이 필요한데, 눈앞에 있는 곳은 그 카페뿐입니다. 다른 카페는 15분을 걸어가야 합니다.",
-        descEn: "You are boycotting a cafe franchise due to unethical business practices. However, you are extremely exhausted, stressed, and desperately need coffee right now. This cafe is right in front of you, and the next one is a 15-minute walk away.",
+        title: "논란이 있는 프랜차이즈 카페",
+        titleEn: "Controversial cafe franchise",
+        desc: "오늘 너무 피곤하고 스트레스를 받아 당장 커피 수혈이 필요합니다. 눈앞에 있는 곳은 최근 비윤리적 경영으로 뉴스에 오르내린 프랜차이즈 카페입니다. 다른 카페는 15분을 걸어가야 합니다.",
+        descEn: "You are extremely exhausted, stressed, and desperately need coffee right now. The cafe right in front of you is a franchise recently in the news for unethical business practices. The next cafe is a 15-minute walk away.",
         options: [
-            { id: "A", text: "오늘 하루 너무 힘들기 때문에 예외로 두고 당장 커피를 사 마신다.", textEn: "Make an exception just for today and buy the coffee because you are too stressed." },
-            { id: "B", text: "불매 원칙이 더 중요하므로 15분을 걸어가서 다른 카페를 이용한다.", textEn: "Walk the extra 15 minutes to another cafe because sticking to the boycott is more important." },
-            { id: "C", text: "신념을 지키기 위해 오늘 커피 소비 자체를 포기한다.", textEn: "Give up on buying coffee entirely today to uphold your beliefs." },
-            { id: "D", text: "근처 편의점에서 저렴한 캔커피를 사서 타협한다.", textEn: "Compromise by buying a cheap canned coffee from a nearby convenience store." }
+            { id: "A", text: "기업의 논란은 크게 신경 쓰지 않으므로 당장 들어가서 커피를 사 마신다.", textEn: "I don't care much about corporate controversies, so I go in and buy coffee." },
+            { id: "B", text: "불매에 동참하는 편이므로 피곤해도 15분을 걸어가서 다른 카페를 이용한다.", textEn: "I tend to participate in boycotts, so I walk 15 minutes to another cafe despite being tired." },
+            { id: "C", text: "해당 기업을 이용하기 찝찝하므로 오늘 커피 소비 자체를 포기한다.", textEn: "I feel uncomfortable using that company, so I give up on buying coffee entirely today." },
+            { id: "D", text: "기업 논란을 피하고 돈도 아낄 겸 근처 편의점 캔커피로 타협한다.", textEn: "I avoid the controversial cafe and save money by compromising with a convenience store canned coffee." }
         ]
     },
     {
@@ -72,15 +72,15 @@ const predeterminedScenarios = [
         ]
     },
     {
-        title: "가치관과 상충하는 선물",
-        titleEn: "Conflicting values in gifting",
-        desc: "친한 친구가 생일 선물로 특정 브랜드의 '천연 가죽 지갑'을 콕 집어 부탁했습니다. 하지만 당신은 동물권 보호와 친환경 소비를 매우 중요하게 생각합니다.",
-        descEn: "A close friend specifically asks for a 'genuine leather wallet' from a certain brand for their birthday. However, you strongly believe in animal rights and strictly practice ethical consumption.",
+        title: "소재 논란이 있는 생일 선물",
+        titleEn: "A birthday gift with material controversies",
+        desc: "친한 친구가 생일 선물로 특정 브랜드의 '천연 가죽 지갑'을 콕 집어 부탁했습니다. 하지만 최근 동물권 보호와 친환경 소비에 대한 사회적 논의가 많아지고 있습니다.",
+        descEn: "A close friend specifically asks for a 'genuine leather wallet' for their birthday. Recently, there has been a lot of social discussion about animal rights and the environmental impact of consuming real leather.",
         options: [
-            { id: "A", text: "친구의 생일이고 본인이 원하는 것이므로 가죽 지갑을 사준다.", textEn: "Buy the leather wallet because it's their birthday and it's what they want." },
-            { id: "B", text: "유명 브랜드의 고급 '비건 가죽' 지갑을 대안으로 사서 설득한다.", textEn: "Buy a high-end 'vegan leather' wallet from a famous brand as an alternative." },
-            { id: "C", text: "내 돈으로 직접 사주기 꺼려지므로 현금이나 백화점 상품권을 준다.", textEn: "Give them cash or a gift card because you feel uncomfortable buying it directly." },
-            { id: "D", text: "가치관을 솔직히 설명하고, 완전히 다른 윤리적인 선물을 사준다.", textEn: "Honestly explain your values and buy a completely different, ethical gift." }
+            { id: "A", text: "친구가 원하고 내 신념과 크게 충돌하지 않으므로 가죽 지갑을 사준다.", textEn: "Buy the leather wallet because the friend wants it and it doesn't strongly conflict with my beliefs." },
+            { id: "B", text: "가죽 소비가 신경 쓰이므로 유명 브랜드의 고급 '비건 가죽' 지갑을 대안으로 사서 설득한다.", textEn: "Buy a high-end 'vegan leather' alternative because real leather bothers me." },
+            { id: "C", text: "직접 사주기 찝찝하므로 알아서 사도록 현금이나 백화점 상품권을 준다.", textEn: "Give them cash or a gift card so they can buy it themselves, avoiding direct involvement." },
+            { id: "D", text: "환경 문제에 대한 내 생각을 솔직히 설명하고, 완전히 다른 선물을 사준다.", textEn: "Honestly explain my thoughts and buy a completely different gift." }
         ]
     },
     {
