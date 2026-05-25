@@ -53,26 +53,68 @@
             <p style="font-size: 14px; color: #666; text-align: center;">성향을 입력하면 동일한 쇼핑 상황에서 AI 소비자가 어떤 선택을 할지 먼저 예측합니다.</p>
 
             <div class="section-title">1. 성격 성향 (Big 5)</div>
-            <div class="slider-group"><label>외향성 (E)</label><div class="slider-wrapper"><span>내향적</span><input type="range" id="e_score" min="1" max="5" value="3"><span>외향적</span></div></div>
-            <div class="slider-group"><label>친화성 (A)</label><div class="slider-wrapper"><span>경쟁적</span><input type="range" id="a_score" min="1" max="5" value="3"><span>협조적</span></div></div>
-            <div class="slider-group"><label>개방성 (O)</label><div class="slider-wrapper"><span>보수적</span><input type="range" id="o_score" min="1" max="5" value="3"><span>개방적</span></div></div>
-            <div class="slider-group"><label>성실성 (C)</label><div class="slider-wrapper"><span>즉흥적</span><input type="range" id="c_score" min="1" max="5" value="3"><span>계획적</span></div></div>
-            <div class="slider-group"><label>신경성 (N)</label><div class="slider-wrapper"><span>안정</span><input type="range" id="n_score" min="1" max="5" value="3"><span>민감</span></div></div>
+            <div class="slider-group">
+                <label>외향성 (E)</label>
+                <p class="trait-desc">외부 활동과 사교성을 즐기는 정도입니다. 높을수록 타인과의 교류에서 에너지를 얻습니다.</p>
+                <div class="slider-wrapper"><span>내향적</span><input type="range" id="e_score" min="1" max="5" value="3"><span>외향적</span></div>
+            </div>
+            <div class="slider-group">
+                <label>친화성 (A)</label>
+                <p class="trait-desc">타인에게 공감하고 배려하는 정도입니다. 높을수록 개인의 이익보다 집단의 조화를 중시합니다.</p>
+                <div class="slider-wrapper"><span>경쟁적</span><input type="range" id="a_score" min="1" max="5" value="3"><span>협조적</span></div>
+            </div>
+            <div class="slider-group">
+                <label>개방성 (O)</label>
+                <p class="trait-desc">새로운 경험과 아이디어를 수용하는 정도입니다. 높을수록 낯설고 혁신적인 것을 선호합니다.</p>
+                <div class="slider-wrapper"><span>보수적</span><input type="range" id="o_score" min="1" max="5" value="3"><span>개방적</span></div>
+            </div>
+            <div class="slider-group">
+                <label>성실성 (C)</label>
+                <p class="trait-desc">목표를 세우고 통제력을 발휘하는 정도입니다. 높을수록 꼼꼼하게 비교하고 계획적으로 소비합니다.</p>
+                <div class="slider-wrapper"><span>즉흥적</span><input type="range" id="c_score" min="1" max="5" value="3"><span>계획적</span></div>
+            </div>
+            <div class="slider-group">
+                <label>신경성 (N)</label>
+                <p class="trait-desc">스트레스나 부정적 감정에 반응하는 정도입니다. 높을수록 감정이나 불안 해소를 위한 소비가 잦을 수 있습니다.</p>
+                <div class="slider-wrapper"><span>안정적</span><input type="range" id="n_score" min="1" max="5" value="3"><span>민감함</span></div>
+            </div>
 
             <div class="section-title">2. 쇼핑 성향</div>
-            <div class="slider-group"><label>트렌드 민감도</label><div class="slider-wrapper"><span>유행 둔감</span><input type="range" id="trend_score" min="1" max="5" value="3"><span>유행 민감</span></div></div>
-            <div class="slider-group"><label>SNS 활용도</label><div class="slider-wrapper"><span>주 1회</span><input type="range" id="sns_score" min="1" max="5" value="3"><span>주 5회 이상</span></div></div>
-            <div class="slider-group"><label>가성비 중시</label><div class="slider-wrapper"><span>가성비 우선</span><input type="range" id="value_score" min="1" max="5" value="3"><span>금액 무관</span></div></div>
-            <div class="slider-group"><label>브랜드 민감도</label><div class="slider-wrapper"><span>브랜드 무관</span><input type="range" id="brand_score" min="1" max="5" value="3"><span>브랜드 중시</span></div></div>
-            <div class="slider-group"><label>구매 성향</label><div class="slider-wrapper"><span>계획 구매</span><input type="range" id="buy_score" min="1" max="5" value="3"><span>충동 구매</span></div></div>
+            <div class="slider-group">
+                <label>트렌드 민감도</label>
+                <p class="trait-desc">최신 유행이나 신제품에 얼마나 빠르게 반응하고 소비하는지 나타냅니다.</p>
+                <div class="slider-wrapper"><span>유행 둔감</span><input type="range" id="trend_score" min="1" max="5" value="3"><span>유행 민감</span></div>
+            </div>
+            <div class="slider-group">
+                <label>SNS 활용도</label>
+                <p class="trait-desc">소셜 미디어를 자주 사용하며, 알고리즘이나 인플루언서의 추천에 영향을 받는 정도입니다.</p>
+                <div class="slider-wrapper"><span>거의 안함</span><input type="range" id="sns_score" min="1" max="5" value="3"><span>매우 활발</span></div>
+            </div>
+            <div class="slider-group">
+                <label>가성비 중시</label>
+                <p class="trait-desc">물건을 살 때 예산을 엄격하게 지키는지, 혹은 품질과 편의를 위해 돈을 더 지불할 의향이 있는지 나타냅니다.</p>
+                <div class="slider-wrapper"><span>가성비 우선</span><input type="range" id="value_score" min="1" max="5" value="3"><span>금액 무관</span></div>
+            </div>
+            <div class="slider-group">
+                <label>브랜드 민감도</label>
+                <p class="trait-desc">단순한 기능성보다는 브랜드의 인지도, 신뢰도, 이미지를 얼마나 중요하게 생각하는지 나타냅니다.</p>
+                <div class="slider-wrapper"><span>브랜드 무관</span><input type="range" id="brand_score" min="1" max="5" value="3"><span>브랜드 중시</span></div>
+            </div>
+            <div class="slider-group">
+                <label>구매 성향</label>
+                <p class="trait-desc">미리 필요를 파악하고 계획된 소비를 하는지, 순간적인 기분이나 끌림에 의해 결제하는지 나타냅니다.</p>
+                <div class="slider-wrapper"><span>계획 구매</span><input type="range" id="buy_score" min="1" max="5" value="3"><span>충동 구매</span></div>
+            </div>
             
             <div class="section-title">3. 현재 상황</div>
-            <div class="slider-group"><label></label>
-            <select id="user_status" style="width: 100%; padding: 10px; border-radius: 8px;">
-            <option value="student">학생 / 취업준비생 (예산이 타이트함)</option>
-            <option value="worker_junior">사회초년생 (소비 여력이 조금 있음)</option>
-            <option value="worker_senior">직장인 (예산보다 시간/질을 중시함)</option>
-            </select>
+            <div class="slider-group">
+                <label>나의 라이프스타일</label>
+                <p class="trait-desc">현재 나의 경제적 상황과 지출 우선순위를 가장 잘 나타내는 단계를 선택해 주세요.</p>
+                <select id="user_status" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                    <option value="student">학생 / 취업준비생 (예산이 타이트함)</option>
+                    <option value="worker_junior">사회초년생 (소비 여력이 조금 있음)</option>
+                    <option value="worker_senior">직장인 (예산보다 시간/질을 중시함)</option>
+                </select>
             </div>
 
             <button class="btn" id="start-btn" onclick="startSimulation()">AI 소비자 예측 시작하기</button>
