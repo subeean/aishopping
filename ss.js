@@ -271,7 +271,7 @@ app.post('/api/simulate', async (req, res) => {
     const scenarioPromptData = buildScenarioPromptData();
 
     const statusMap = {
-        "student": "Student / Job-seeker (Tight budget, heavily prioritizes saving and value-for-money)",
+        "student": "Student / Job-seeker (Tight budget, prioritizes saving and value-for-money)",
         "worker_junior": "Junior employee (Some disposable income, balances between saving and occasional treats)",
         "worker_senior": "Established professional (High disposable income, prioritizes time, convenience, and quality over strict budget)"
     };
@@ -279,12 +279,7 @@ app.post('/api/simulate', async (req, res) => {
     const currentLifeStage = statusMap[req.body.traits.userStatus] || statusMap["worker_junior"];
 
     const prompt = `
-You are simulating a consumer decision-maker for a user study.
-
-Task:
-Predict which option this person would choose in each shopping scenario.
-Base the prediction only on the trait profile below.
-Do not choose the objectively best answer. Choose the answer most consistent with the profile.
+You are a participant in a psychological consumer study. You must completely embody the persona described below and make shopping decisions EXACTLY as this person would. Do not choose what is "objectively best"—choose what YOU would do based on your flaws, limits, and desires.
 
 Current Life Stage & Financial Context:
 ${currentLifeStage}
