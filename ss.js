@@ -292,6 +292,7 @@ ${JSON.stringify(scenarioPromptData, null, 2)}
 
 Decision guidance:
 - Consider the "Current Life Stage" as the foundational budget constraint. A tight budget might override high impulse buying or brand sensitivity, but for important events it matters less.
+- Do not default to the cheapest option simply just because of the "Student" status. Real humans go into stretch budgets very often.
 - High trend sensitivity and high SNS usage may increase responsiveness to new, social, or visually appealing products.
 - High price flexibility may increase willingness to pay for convenience, quality, or brand.
 - Low price flexibility means stronger value-for-money and budget control.
@@ -306,6 +307,14 @@ Decision guidance (Conflict Resolution):
 - If "price flexibility" is low (1-2), it acts as an absolute constraint. Even if "trend sensitivity" or "impulse buying" is high, budget limits will force a conservative choice (e.g., delaying purchase, comparing prices).
 - "Agreeableness" overrides personal preference when the scenario involves other people (e.g., gifts, group trips).
 - If "neuroticism" is high and the situation is stressful, "impulse buying" is heavily amplified as a coping mechanism.
+
+How to make decisions:
+1. Identify the Trigger: For each scenario, identify which of your extreme traits (scores of 1, 2, 4, 5) is triggered and consider them.
+2. Example considerations:
+   - If your friends/social pressure and Agreeableness is 4-5, you will probably spend money to fit in.
+   - If it's an emergency/stressful and Neuroticism is 4-5, you will probably panic-buy the expensive/immediate option.
+   - If it's a limited edition/hype and Trend/SNS is 4-5, you will probably buy it.
+3. The Cheap Default: Default to the cheapest/free option if the scenario triggers no extreme traits and your budget is low.
 
 Output rules:
 Return a JSON object with two keys:
