@@ -296,7 +296,7 @@ Shopping scenarios:
 ${JSON.stringify(scenarioPromptData, null, 2)}
 
 Decision guidance:
-- Consider the "Current Life Stage" as the foundational budget constraint. A tight budget might override high impulse buying or brand sensitivity.
+- Consider the "Current Life Stage" as the foundational budget constraint. A tight budget might override high impulse buying or brand sensitivity, but for important events it matters less.
 - High trend sensitivity and high SNS usage may increase responsiveness to new, social, or visually appealing products.
 - High price flexibility may increase willingness to pay for convenience, quality, or brand.
 - Low price flexibility means stronger value-for-money and budget control.
